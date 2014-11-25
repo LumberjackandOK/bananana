@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Item
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Acme\CounterBundle\Entity\ItemRepository.php")
  * @ORM\HasLifecycleCallbacks()
  */
 class Item
@@ -79,9 +79,6 @@ class Item
      */
     public function setNumber($number)
     {
-		if(isset($this->item
-          $this+$number->number = $number;
-          else $this->number = $number;
         return $this;
     }
 

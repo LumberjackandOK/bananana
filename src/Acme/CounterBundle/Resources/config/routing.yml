@@ -1,3 +1,11 @@
 acme_counter_homepage:
     path:     /{item}/{number}
-    defaults: { _controller: AcmeCounterBundle:Default:index }
+    defaults: { _controller: AcmeCounterBundle:Counter:index }
+    
+_welcome:
+    path:     /
+    defaults: { _controller: AcmeCounterBundle:Welcome:index }
+
+item:
+    path:     /item
+    defaults: { _controller: AcmeCounterBundle:Item:index }
