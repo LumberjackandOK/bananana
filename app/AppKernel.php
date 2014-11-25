@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Acme\StoreBundle\AcmeStoreBundle(),
             new Acme\TestBundle\AcmeTestBundle(),
             new Acme\CounterBundle\AcmeCounterBundle(),
+            new org\TrackerBundle\orgTrackerBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

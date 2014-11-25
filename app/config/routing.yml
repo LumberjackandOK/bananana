@@ -1,3 +1,4 @@
-acme_counter:
-    resource: "@AcmeCounterBundle/Resources/config/routing.yml"
+org_tracker:
+    resource: "@orgTrackerBundle/Controller/"
+    type:     annotation
     prefix:   /
