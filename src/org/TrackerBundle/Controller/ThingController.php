@@ -35,6 +35,7 @@ class ThingController extends Controller
             'entities' => $entities,
         );
     }
+    
     /**
      * Creates a new Thing entity.
      *
