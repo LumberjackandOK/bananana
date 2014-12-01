@@ -1,4 +1,10 @@
-org_tracker:
-    resource: "@orgTrackerBundle/Controller/"
+acme_sos:
+    resource: "@AcmeSOSBundle/Controller/"
     type:     annotation
     prefix:   /
+
+tracker_pipeline:
+    resource: "@trackerPipelineBundle/Controller/"
+    type:     annotation
+    prefix:   /
+

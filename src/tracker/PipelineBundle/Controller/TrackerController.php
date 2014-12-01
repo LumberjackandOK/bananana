@@ -1,51 +1,84 @@
 <?php
 
-namespace org\TrackerBundle\Controller;
+namespace tracker\PipelineBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use org\TrackerBundle\Entity\Thing;
-use org\TrackerBundle\Form\ThingType;
+use tracker\PipelineBundle\Entity\Object;
+use tracker\PipelineBundle\Form\ObjectType;
 
 /**
- * Thing controller.
+ * Object controller.
  *
- * @Route("/thing")
+ * @Route("/tracker")
  */
-class ThingController extends Controller
+class ObjectController extends Controller
 {
-
+    
     /**
-     * Lists all Thing entities.
+     * Checks for the Object entity, and adds/updates.
      *
-     * @Route("/", name="thing")
-     * @Method("GET")
-     * @Template()
+     * @Route("/{objectname}/{number}/{updn}")
+     * @Method("POST")
+     * @Template("trackerPipelineBundle:Object:new.html.twig")
      */
-    public function indexAction()
+     public function indexAction($objectname)
     {
-        $em = $this->getDoctrine()->getManager();
+        
+		$object = $this->getDoctrine()
+			->getRepository('trackerPipelineBundle:Object')
+			->findOneByobjectName($objectname);
 
-        $entities = $em->getRepository('orgTrackerBundle:Thing')->findAll();
+        if (!$object) {
+			function createAction()
+			{
+				$object = new Object();
+				$object->setobjectName($objectname);
+				$object->setQuantity($number);
+				
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($object);
+				$em->flush();
+				
+			}
+		}
+		
+			public function updateAction($id)
+{
+    $em = $this->getDoctrine()->getManager();
+    $product = $em->getRepository('AcmeStoreBundle:Product')->find($id);
+
+    if (!$product) {
+        throw $this->createNotFoundException(
+            'No product found for id '.$id
+        );
+    }
+
+    $product->setName('New product name!');
+    $em->flush();
+
+    return $this->redirect($this->generateUrl('homepage'));
+}
 
         return array(
             'entities' => $entities,
         );
     }
+     
     
     /**
-     * Creates a new Thing entity.
+     * Creates a new Object entity.
      *
-     * @Route("/", name="thing_create")
+     * @Route("/", name="object_create")
      * @Method("POST")
-     * @Template("orgTrackerBundle:Thing:new.html.twig")
+     * @Template("trackerPipelineBundle:Object:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity = new Thing();
+        $entity = new Object();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -54,26 +87,25 @@ class ThingController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('thing_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('object_show', array('id' => $entity->getId())));
         }
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
         );
     }
 
     /**
-     * Creates a form to create a Thing entity.
+     * Creates a form to create a Object entity.
      *
-     * @param Thing $entity The entity
+     * @param Object $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Thing $entity)
+    private function createCreateForm(Object $entity)
     {
-        $form = $this->createForm(new ThingType(), $entity, array(
-            'action' => $this->generateUrl('thing_create'),
+        $form = $this->createForm(new ObjectType(), $entity, array(
+            'action' => $this->generateUrl('object_create'),
             'method' => 'POST',
         ));
 
@@ -83,15 +115,15 @@ class ThingController extends Controller
     }
 
     /**
-     * Displays a form to create a new Thing entity.
+     * Displays a form to create a new Object entity.
      *
-     * @Route("/new", name="thing_new")
+     * @Route("/new", name="object_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new Thing();
+        $entity = new Object();
         $form   = $this->createCreateForm($entity);
 
         return array(
@@ -101,9 +133,9 @@ class ThingController extends Controller
     }
 
     /**
-     * Finds and displays a Thing entity.
+     * Finds and displays a Object entity.
      *
-     * @Route("/{id}", name="thing_show")
+     * @Route("/{id}", name="object_show")
      * @Method("GET")
      * @Template()
      */
@@ -111,10 +143,10 @@ class ThingController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('orgTrackerBundle:Thing')->find($id);
+        $entity = $em->getRepository('trackerPipelineBundle:Object')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Thing entity.');
+            throw $this->createNotFoundException('Unable to find Object entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -126,9 +158,9 @@ class ThingController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Thing entity.
+     * Displays a form to edit an existing Object entity.
      *
-     * @Route("/{id}/edit", name="thing_edit")
+     * @Route("/{id}/edit", name="object_edit")
      * @Method("GET")
      * @Template()
      */
@@ -136,10 +168,10 @@ class ThingController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('orgTrackerBundle:Thing')->find($id);
+        $entity = $em->getRepository('trackerPipelineBundle:Object')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Thing entity.');
+            throw $this->createNotFoundException('Unable to find Object entity.');
         }
 
         $editForm = $this->createEditForm($entity);
@@ -153,16 +185,16 @@ class ThingController extends Controller
     }
 
     /**
-    * Creates a form to edit a Thing entity.
+    * Creates a form to edit a Object entity.
     *
-    * @param Thing $entity The entity
+    * @param Object $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(Thing $entity)
+    private function createEditForm(Object $entity)
     {
-        $form = $this->createForm(new ThingType(), $entity, array(
-            'action' => $this->generateUrl('thing_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new ObjectType(), $entity, array(
+            'action' => $this->generateUrl('object_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -171,20 +203,20 @@ class ThingController extends Controller
         return $form;
     }
     /**
-     * Edits an existing Thing entity.
+     * Edits an existing Object entity.
      *
-     * @Route("/{id}", name="thing_update")
+     * @Route("/{id}", name="object_update")
      * @Method("PUT")
-     * @Template("orgTrackerBundle:Thing:edit.html.twig")
+     * @Template("trackerPipelineBundle:Object:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('orgTrackerBundle:Thing')->find($id);
+        $entity = $em->getRepository('trackerPipelineBundle:Object')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Thing entity.');
+            throw $this->createNotFoundException('Unable to find Object entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -194,7 +226,7 @@ class ThingController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('thing_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('object_edit', array('id' => $id)));
         }
 
         return array(
@@ -204,9 +236,9 @@ class ThingController extends Controller
         );
     }
     /**
-     * Deletes a Thing entity.
+     * Deletes a Object entity.
      *
-     * @Route("/{id}", name="thing_delete")
+     * @Route("/{id}", name="object_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -216,21 +248,21 @@ class ThingController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('orgTrackerBundle:Thing')->find($id);
+            $entity = $em->getRepository('trackerPipelineBundle:Object')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Thing entity.');
+                throw $this->createNotFoundException('Unable to find Object entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('thing'));
+        return $this->redirect($this->generateUrl('object'));
     }
 
     /**
-     * Creates a form to delete a Thing entity by id.
+     * Creates a form to delete a Object entity by id.
      *
      * @param mixed $id The entity id
      *
@@ -239,7 +271,7 @@ class ThingController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('thing_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('object_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
