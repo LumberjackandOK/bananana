@@ -30,14 +30,21 @@ class TrackerController extends Controller
        			$em = $this->getDoctrine()->getManager();
 
                 $entity = $em->getRepository('trackerPipelineBundle:Object')->findOneByobjectName($objectname);
-       			var_dump ($entity);
        			
-       			if ($entity = NULL) 
+       			if ($entity == NULL) 
        			// checking for existence of object
-       			
        			{
+                    $entity = new Object();
+                    $entity->setobjectName($objectname);
+                    $entity->setQuantity(0);
+
 					// add the new object to the database
 				}
+
+
+                // Do the increment logic
 				
+                $em->persist($entity);
+                $em->flush();
 		}
 }
