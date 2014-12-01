@@ -13,7 +13,7 @@ use tracker\PipelineBundle\Form\ObjectType;
 /**
  * Object controller.
  *
- * @Route("/")
+ * @Route("/object")
  */
 class ObjectController extends Controller
 {
@@ -36,49 +36,7 @@ class ObjectController extends Controller
         );
     }
     
-    /**
-     * Checks for the Object entity, and adds/updates.
-     *
-     * @Route("tracker/{objectname}/{number}/{updn}")
-     * @Method("POST")
-     * @Template("trackerPipelineBundle:Object:new.html.twig")
-     */
-     public function indexAction()
-    {
-        
-		$object = $this->getDoctrine()
-			->getRepository('trackerPipelineBundle:Object')
-			->findOneByObjectname($objectname);
-
-        if (!$object) {
-			function createAction()
-			{
-				$object = new Object();
-				$object->setobjectName($objectname);
-				$object->setQuantity($number);
-				
-				$em = $this->getDoctrine()->getManager();
-				$em->persist($object);
-				$em->flush();
-				
-			}
-		}
-		
-			function updateAction($objectname)
-			{
-				$em = $this->getDoctrine()->getManager();
-				$object = $em->getRepository('trackerPipelineBundle')->findOneByObjectname($objectname);
-				$object->setQuantity($quantity+$number);
-				$em->persist($object);
-				$em->flush();
-				
-				
-			}
-
-        return array(
-            'entities' => $entities,
-        );
-    }
+  
      
     
     /**
